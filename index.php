@@ -63,7 +63,6 @@ steem.broadcast.vote(
       console.log(err, result);
     }
   );
-document.write(post);
 </script>
 </body>
 </html>
