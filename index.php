@@ -60,7 +60,7 @@ foreach ($json_author as $author_latest_post)
     <div class="card-header">You are so successfull</div>
     <div class="card-body">
     <h4 class="card-title">You upvoted '.$author.' with %'.$weight.'</h4>
-    <p class="card-text">Authors latest link: <a href="'.$get_link.'" target="_blank">'.$title_post.'</a></p> has been upvoted</p>
+    <p class="card-text">Authors latest link: <a href="'.$get_link.'" target="_blank">'.$title_post.'</a><br>
 	'; 
 	echo '<br>';
 	echo 'Your comment to authors post; <br>';
