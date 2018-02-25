@@ -42,23 +42,28 @@ foreach ($json_author as $author_latest_post)
     $post_key = ""; // post key //
     $voter = "omeratagun"; // account name //
     $author = $author_input; // author your want to upvote //
-    $permlink = $get_link; // perm link of author -- latest //
-
-  
+    $permlink = $get_link; // perm link of author // 
+    
 ?>
 
 <script>
+var post = '<?php echo $post_key; ?>';
+var voter =  '<?php echo $voter; ?>';
+var author = '<?php echo $author; ?>';
+var permlink = '<?php echo $author_perm_link; ?>';
+var weight = <?php echo $weight; ?>;
 
 steem.broadcast.vote(
-'<?php echo $post_key; ?>',
-'<?php echo $voter; ?>',
-'<?php echo $author; ?>',
-'<?php echo $author_perm_link; ?>',
-'<?php echo $weight; ?>',
-
+    post,
+    voter, // Voter
+    author, // Author
+    permlink, // Permlink
+    weight, // Weight (10000 = 100%)
     function(err, result) {
-	console.log(err, result);
-});,
+      console.log(err, result);
+    }
+  );
+document.write(post);
 </script>
 </body>
 </html>
