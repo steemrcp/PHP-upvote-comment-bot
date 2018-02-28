@@ -8,8 +8,8 @@ $weight = trim($_POST['ratio']);
 $weight_final = 100 * $weight;
 $author_input = trim(strtolower($_POST['author']));
 $comment = trim($_POST['comment']);
-$voter = trim(strtolower($_POST['voter']));
-$post_key = trim($_POST['post_key']);
+$voter = trim(strtolower($_COOKIE['voter']));
+$post_key = trim($_COOKIE['post_key']);
 
 if(isset($_POST['submit']))
 {
