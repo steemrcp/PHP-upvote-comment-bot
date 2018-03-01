@@ -1,7 +1,14 @@
 <?php
-if (isset($_COOKIE['voter']) || isset($_COOKIE['post_key'])){
+
+if(isset($_POST['submit']))
+{
+ $hour = time() + 3600 * 24 * 30;
+ setcookie('voter', $_POST['voter'], $hour);
+setcookie('post_key', $_POST['post_key'], $hour);
+
+header('Location: index.php');
+
 }
-else {header('Location: login.php');}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +27,9 @@ else {header('Location: login.php');}
     <!-- Your custom styles (optional) -->
     <link href="css/style.css" rel="stylesheet">
 </head>
+
 <body>
+
     <!-- Start your project here-->
   <div class="container-fluid">
    
@@ -36,37 +45,26 @@ else {header('Location: login.php');}
             <div class="modal-header primary-color white-text">
                 <h4 class="title">
                     <i class="fa fa-pencil"></i> Steem Vote</h4>
-                <a class="btn-primary" href="logout.php">LOGOUT</a>
+                
             </div>
             <!--Body-->
             <div class="modal-body">
-<form action="action.php" method="POST">
-			
-
-              <div class="md-form form-sm">
-                    <i class="fa fa-address-card prefix"></i>
-                    <input name="author" type="text" id="materialFormNameModalEx2" class="form-control form-control-sm">
-                    <label for="materialFormNameModalEx2">Who To Vote</label>
+<form action="login.php" method="POST">
+			<div class="md-form form-sm">
+                    <i class="fa fa-user prefix"></i>
+                    <input name="voter" type="text" id="materialFormNameModalEx1" class="form-control form-control-sm">
+                    <label for="materialFormNameModalEx1">Your Username</label>
                 </div>
 
                 <!-- Material input subject -->
                 <div class="md-form form-sm">
-                    <i class="fa fa-arrow-up prefix"></i>
-                    <input name="ratio"  type="text" id="materialFormSubjectModalEx1" class="form-control form-control-sm">
-                    <label for="materialFormSubjectModalEx1">Voting Ratio</label>
-                </div>
-
-               
-
-                <!-- Material textarea message -->
-                <div class="md-form form-sm">
-                    <i class="fa fa-pencil prefix"></i>
-                    <textarea type="text" id="materialFormMessageModalEx1" class="md-textarea form-control" name="comment" ></textarea>
-                    <label for="materialFormMessageModalEx1">Comment</label>
+                    <i class="fa fa-key prefix"></i>
+                    <input name="post_key" type="text" id="materialFormKeyModalEx1" class="form-control form-control-sm">
+                    <label for="materialFormKeyModalEx1">Your Posting Key (WIF)</label>
                 </div>
 
                 <div class="text-center mt-4 mb-2">
-                    <input class="btn btn-primary" name="submit"  type="submit" value="Vote&comment" />
+                    <input class="btn btn-primary" name="submit" type="submit" value="Vote&comment" />
                     </input>
                 </div>
 
@@ -81,9 +79,7 @@ else {header('Location: login.php');}
 </div>
     <!-- /Start your project here-->
 
-    <!-- SCRIPTS -->
-    <!-- JQuery -->
-<script
+   <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
@@ -96,3 +92,5 @@ else {header('Location: login.php');}
 </body>
 
 </html>
+
+
