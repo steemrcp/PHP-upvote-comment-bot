@@ -34,25 +34,45 @@ else {header('Location: login.php');}
 
             <!--Header-->
             <div class="modal-header primary-color white-text">
-                <h4 class="title">
+               <a class="btn-primary" href="index.php" align="left" >BACK</a>&nbsp;&nbsp;&nbsp; <h4 class="title">
+				      
                     <i class="fa fa-pencil"></i> Steem Vote</h4>
                 <a class="btn-primary" href="logout.php">LOGOUT</a>
             </div>
             <!--Body-->
             <div class="modal-body">
-
+<form action="postlist.php" method="POST">
 			
 
-              <a type="button" href="single.php" class="btn btn-default btn-lg btn-block">Post Specific Upvote</a>
-<a type="button" href="pickauthor.php" class="btn btn-light-blue btn-lg btn-block">Userlisted List Upvote</a>
+              <div class="md-form form-sm">
+                    <i class="fa fa-address-card prefix"></i>
+                    <input name="author" type="text" id="materialFormNameModalEx2" value="<?=$_COOKIE["author"]?>" class="form-control form-control-sm">
+                    <label for="materialFormNameModalEx2">Who To Vote</label>
+                </div>
 
-                <!-- Material input subject -->
-              
+              <div class="md-form form-sm">
+                    <i class="fa fa-address-card prefix"></i>
+                    <input name="ratio" type="text" id="materialFormNameModalEx2" value="<?=$_COOKIE["ratio"]?>" class="form-control form-control-sm">
+                    <label for="materialFormNameModalEx2">Vote Percentage</label>
+                </div>
+
+              <div class="md-form form-sm">
+                    <i class="fa fa-address-card prefix"></i>
+                    <textarea name="comment" id="materialFormNameModalEx2"  class="form-control form-control-sm"><?=$_COOKIE["comment"]?></textarea>
+                    <label for="materialFormNameModalEx2">Vote Comment</label>
+                </div>
+
+
+                <div class="text-center mt-4 mb-2">
+                    <input class="btn btn-primary" name="submit"  type="submit" value="Vote&comment" />
+                    </input>
+                </div>
 
             </div>
         </div>
         <!--/.Content-->
     </div>
+	</form>
     <!--/Modal: Contact form-->
 </div>
                       

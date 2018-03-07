@@ -1,7 +1,15 @@
 # PHP-upvote-comment-bot
 Upvote&Comment bot written in PHP + JS. 
 
-![](https://image.prntscr.com/image/sN34c4FlQ0uUvkEeVOuObA.png)
+## Screenshots
+
+![a1.PNG](https://steemitimages.com/DQmQknvJ8g9Ucb1ifMU5ct7kBQdTSMUXjqHNN3RkAHPZiRa/a1.PNG)
+
+![a2.PNG](https://steemitimages.com/DQmaxEKbi3MLZYqDr5XqnVKjKaEyAZbLwF34T6qrCFWN14M/a2.PNG)
+
+![a3.PNG](https://steemitimages.com/DQmdYa1NKfqa7NPSwPySoyVCDdSaQJ3m93w6VHFGLvRpNTn/a3.PNG)
+
+![a4.PNG](https://steemitimages.com/DQmaWo1QAujztQZPdyewmGQhFmZTzEfCV627dpxBSYQbSkb/a4.PNG)
 
 
 ### Installation 

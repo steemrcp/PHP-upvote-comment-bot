@@ -31,10 +31,11 @@ else{
  
 foreach ($json_author as $author_latest_post)
 {   
+   if ($author_input == $author_latest_post["author"]){
     $title_post = $author_latest_post['title'];
 	$author_perm_link = $author_latest_post['permlink'];
 	$get_link = $steemit.'@'.$author_input.'/'.$author_perm_link;
-	
+   }
 }
     // type your own post key and the name of account// 
 
