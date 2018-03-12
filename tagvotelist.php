@@ -36,12 +36,8 @@
             </div>
             <!--Body-->
             <div class="modal-body">
-			 <ul class="list-group">
-	<li class="list-group-item">Author: <?=$_COOKIE['author'] ?> </li>
-	<li class="list-group-item">Ratio: <?=$_COOKIE['ratio'] ?> </li>
-	<li class="list-group-item">Comment: <?=$_COOKIE['comment'] ?> </li>
-</ul>
-			<?php
+		<h2>All POSTS BELOW HAS BEEN UPVOTED BY YOU ,CLICK <b>VIEW LINK</b> TO CHECK</h2>
+<?php			
 error_reporting(0);
 include('parsedown.php');
 $error = false;
@@ -49,12 +45,13 @@ $error = false;
 $steemit = 'https://busy.org';
 // ratio calculator //
 $author_input = trim(strtolower($_POST['author']));
+$tag = trim(strtolower($_POST['tag']));
 
 if(isset($_POST['submit']))
 {
 	// if inputs are empty, print error //
 if(empty($author_input))
-{
+{ 
 	$error = true;
 	echo '
 	<div class="alert alert-danger">
@@ -66,51 +63,109 @@ else{
 // Get latest posts by author //
 
  $hour = time() + 3600 * 24 * 30;
-setcookie('author', $_POST['author'], $hour);
+
 setcookie('comment', $_POST['comment'], $hour);
 setcookie('ratio', $_POST['ratio'], $hour);
 
+ 
+$limit = 10;
+ if ($tag == 'created'){ $author_posts = 'https://api.steemjs.com/get_discussions_by_created?query={"tag":"'.$author_input.'","limit":"'.$limit.'"}';}
+ else if ($tag == 'trending'){$author_posts = 'https://api.steemjs.com/get_discussions_by_trending?query={"tag":"'.$author_input.'","limit":"'.$limit.'"}'; }
+ else if ($tag == 'hot'){$author_posts = 'https://api.steemjs.com/get_discussions_by_hot?query={"tag":"'.$author_input.'","limit":"'.$limit.'"}'; }
+ 
 
- $author_posts = 'https://api.steemjs.com/get_discussions_by_blog?query={"tag":"'.$author_input.'","limit":"30"}';
+ 
  $file_get_author = file_get_contents($author_posts);
  $json_author = json_decode($file_get_author, true);
  $parsedown = new Parsedown;
 
-
  $n = 0;
 foreach ($json_author as $data)
 {   $n++;
-   if ($author_input == $data["author"]){
+ setcookie('author', $data['author'], $hour);
+ 
+ 
     $title_post = $data['title'];
+    $post_author = $data['author'];
 	$author_perm_link = $data['permlink'];
-	$linkout = 'localhost/steemvote/upvote.php?a='.$author_perm_link;
-	$get_link = $steemit.'/@'.$author_input.'/'.$author_perm_link;
+	$linkout = 'localhost/steemvote/upvote.php?a='.$author_perm_link.'&author='.$data['author'];
+	$get_link = $steemit.'/@'.$data['author'].'/'.$author_perm_link;
 	$body = $data['body'];
 	$body = $parsedown->text($body);
+
 	
-	
-	libxml_use_internal_errors(true);
+	//Unset previously made cookies
+setcookie("verror", "", time() - 3600);
+setcookie("vresult", "", time() - 3600);
+setcookie("cerror", "", time() - 3600);
+setcookie("cresult", "", time() - 3600);
 
-$dom = new DOMDocument;
-$dom->loadHTML($body);
-
-
-foreach ($dom->getElementsByTagName('img') as $node) {
-
-    $node->setAttribute('class','img-responsive col-sm-6 col-lg-7');
-
-}
-
-$body =$dom->saveHTML();
-
-	$body_part = substr($data['body'],0,300);	
+$comment = trim($_COOKIE['comment']);
+$voter = trim(strtolower($_COOKIE['voter']));
+$post_key = trim($_COOKIE['post_key']);
+$get_link = $steemit.'/@'.$post_author.'/'.$author_perm_link;
+$weight_final = 100 * $_COOKIE['ratio'];
 	?>
 	
+<script src="//cdn.steemjs.com/lib/latest/steem.min.js"></script>	
+<script>
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
 
+
+var postWif = '<?php echo $post_key; ?>';
+var voter =  '<?php echo $voter; ?>';
+var author = '<?php echo $post_author; ?>';
+var permlink = '<?php echo $author_perm_link; ?>';
+var weight = <?php echo $weight_final; ?>;
+var comment = '<?php echo $comment; ?>';
+
+steem.broadcast.vote(
+    postWif,
+    voter, // Voter
+    author, // Author
+    permlink, // Permlink
+    weight, // Weight (10000 = 100%)
+    function(err, result) {
+      console.log(err, result);
+	
+	setCookie('verror',err,7);
+	setCookie('vresult',result,7);
+    }
+	
+	
+  );
+  
+  var permlink_comment = new Date().toISOString().replace(/[^a-zA-Z0-9]+/g, '').toLowerCase();
+  steem.broadcast.comment(
+    postWif,
+    author, // Parent Author
+    permlink, // Parent Permlink
+    voter, // Author
+    permlink_comment, // Permlink
+    '', // Title
+    comment, // Body
+	{ tags: [''], app: 'steemjs/examples' }, // Json Metadata
+    function(err, result) {
+      console.log(err, result);
+	setCookie('cerror',err,7);
+	setCookie('cresult',result,7);
+    }
+  );
+</script>
 <!--Section: Magazine v.1-->
 
+
+
     <!--Section heading-->
-    <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a> </h2>
+    <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$post_author?>"><?=$post_author ?></a> </h2>
 
     <!--Section description-->
     <p class="grey-text pb-5" style="word-wrap: break-word;"><?=$body_part ?></p>
@@ -120,38 +175,12 @@ $body =$dom->saveHTML();
 
     <!--Grid column-->
     <div class="col-lg-6 col-md-12">
-
-	 <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
        <a target="_BLANK" href="<?=$get_link?>" style="margin: 2px;" class="btn btn-secondary">VIEW LINK</a>
      
   
-        <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary"  style="margin: 2px;" data-toggle="modal" data-target="#exampleModal<?=$n?>">
-    View Post
-</button>
 
 
-     
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal<?=$n?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-           
-            <div class="modal-body">
-			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a></h2><br/>
-<?=$body ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
-            </div>
-		
-        </div>
-    </div>
-</div>
                                 
-
 
     </div>
     <!--Grid column-->
@@ -164,7 +193,7 @@ $body =$dom->saveHTML();
 	<?php
 	
 	
-	
+	sleep(22);
 	
 	
 	
@@ -172,7 +201,7 @@ $body =$dom->saveHTML();
 }
    
 }
-}	
+	
 ?>
 
 </div>

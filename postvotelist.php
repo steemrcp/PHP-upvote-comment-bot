@@ -85,29 +85,77 @@ foreach ($json_author as $data)
 	$author_perm_link = $data['permlink'];
 	$linkout = 'localhost/steemvote/upvote.php?a='.$author_perm_link;
 	$get_link = $steemit.'/@'.$author_input.'/'.$author_perm_link;
-	$body = $data['body'];
-	$body = $parsedown->text($body);
+
 	
-	
-	libxml_use_internal_errors(true);
+	//Unset previously made cookies
+setcookie("verror", "", time() - 3600);
+setcookie("vresult", "", time() - 3600);
+setcookie("cerror", "", time() - 3600);
+setcookie("cresult", "", time() - 3600);
 
-$dom = new DOMDocument;
-$dom->loadHTML($body);
-
-
-foreach ($dom->getElementsByTagName('img') as $node) {
-
-    $node->setAttribute('class','img-responsive col-sm-6 col-lg-7');
-
-}
-
-$body =$dom->saveHTML();
-
-	$body_part = substr($data['body'],0,300);	
+$comment = trim($_COOKIE['comment']);
+$voter = trim(strtolower($_COOKIE['voter']));
+$post_key = trim($_COOKIE['post_key']);
+$get_link = $steemit.'/@'.$author_input.'/'.$author_perm_link;
+$weight_final = 100 * $_COOKIE['ratio'];
 	?>
 	
+<script src="//cdn.steemjs.com/lib/latest/steem.min.js"></script>	
+<script>
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
 
+
+var postWif = '<?php echo $post_key; ?>';
+var voter =  '<?php echo $voter; ?>';
+var author = '<?php echo $author_input; ?>';
+var permlink = '<?php echo $author_perm_link; ?>';
+var weight = <?php echo $weight_final; ?>;
+var comment = '<?php echo $comment; ?>';
+
+steem.broadcast.vote(
+    postWif,
+    voter, // Voter
+    author, // Author
+    permlink, // Permlink
+    weight, // Weight (10000 = 100%)
+    function(err, result) {
+      console.log(err, result);
+	
+	setCookie('verror',err,7);
+	setCookie('vresult',result,7);
+    }
+	
+	
+  );
+  
+  var permlink_comment = new Date().toISOString().replace(/[^a-zA-Z0-9]+/g, '').toLowerCase();
+  steem.broadcast.comment(
+    postWif,
+    author, // Parent Author
+    permlink, // Parent Permlink
+    voter, // Author
+    permlink_comment, // Permlink
+    '', // Title
+    comment, // Body
+	{ tags: [''], app: 'steemjs/examples' }, // Json Metadata
+    function(err, result) {
+      console.log(err, result);
+	setCookie('cerror',err,7);
+	setCookie('cresult',result,7);
+    }
+  );
+</script>
 <!--Section: Magazine v.1-->
+
+
 
     <!--Section heading-->
     <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a> </h2>
@@ -120,36 +168,11 @@ $body =$dom->saveHTML();
 
     <!--Grid column-->
     <div class="col-lg-6 col-md-12">
-
-	 <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
        <a target="_BLANK" href="<?=$get_link?>" style="margin: 2px;" class="btn btn-secondary">VIEW LINK</a>
      
   
-        <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary"  style="margin: 2px;" data-toggle="modal" data-target="#exampleModal<?=$n?>">
-    View Post
-</button>
 
 
-     
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal<?=$n?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-           
-            <div class="modal-body">
-			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a></h2><br/>
-<?=$body ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
-            </div>
-		
-        </div>
-    </div>
-</div>
                                 
 
 
@@ -164,7 +187,7 @@ $body =$dom->saveHTML();
 	<?php
 	
 	
-	
+	sleep(22);
 	
 	
 	

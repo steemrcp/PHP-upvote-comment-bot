@@ -37,9 +37,10 @@
             <!--Body-->
             <div class="modal-body">
 			 <ul class="list-group">
-	<li class="list-group-item">Author: <?=$_COOKIE['author'] ?> </li>
+	<li class="list-group-item">Tag: <?=$_COOKIE['author'] ?> </li>
 	<li class="list-group-item">Ratio: <?=$_COOKIE['ratio'] ?> </li>
 	<li class="list-group-item">Comment: <?=$_COOKIE['comment'] ?> </li>
+	<li class="list-group-item">Category: <?=$_POST['tag'] ?> </li>
 </ul>
 			<?php
 error_reporting(0);
@@ -49,12 +50,13 @@ $error = false;
 $steemit = 'https://busy.org';
 // ratio calculator //
 $author_input = trim(strtolower($_POST['author']));
+$tag = trim(strtolower($_POST['tag']));
 
 if(isset($_POST['submit']))
 {
 	// if inputs are empty, print error //
 if(empty($author_input))
-{
+{ 
 	$error = true;
 	echo '
 	<div class="alert alert-danger">
@@ -66,25 +68,33 @@ else{
 // Get latest posts by author //
 
  $hour = time() + 3600 * 24 * 30;
-setcookie('author', $_POST['author'], $hour);
+
 setcookie('comment', $_POST['comment'], $hour);
 setcookie('ratio', $_POST['ratio'], $hour);
 
+ 
+$limit = 10;
+ if ($tag == 'created'){ $author_posts = 'https://api.steemjs.com/get_discussions_by_created?query={"tag":"'.$author_input.'","limit":"'.$limit.'"}';}
+ else if ($tag == 'trending'){$author_posts = 'https://api.steemjs.com/get_discussions_by_trending?query={"tag":"'.$author_input.'","limit":"'.$limit.'"}'; }
+ else if ($tag == 'hot'){$author_posts = 'https://api.steemjs.com/get_discussions_by_hot?query={"tag":"'.$author_input.'","limit":"'.$limit.'"}'; }
+ 
 
- $author_posts = 'https://api.steemjs.com/get_discussions_by_blog?query={"tag":"'.$author_input.'","limit":"30"}';
+ 
  $file_get_author = file_get_contents($author_posts);
  $json_author = json_decode($file_get_author, true);
  $parsedown = new Parsedown;
 
-
  $n = 0;
 foreach ($json_author as $data)
 {   $n++;
-   if ($author_input == $data["author"]){
+ setcookie('author', $data['author'], $hour);
+ 
+ 
     $title_post = $data['title'];
+    $post_author = $data['author'];
 	$author_perm_link = $data['permlink'];
-	$linkout = 'localhost/steemvote/upvote.php?a='.$author_perm_link;
-	$get_link = $steemit.'/@'.$author_input.'/'.$author_perm_link;
+	$linkout = 'localhost/steemvote/upvote.php?a='.$author_perm_link.'&author='.$data['author'];
+	$get_link = $steemit.'/@'.$data['author'].'/'.$author_perm_link;
 	$body = $data['body'];
 	$body = $parsedown->text($body);
 	
@@ -110,7 +120,7 @@ $body =$dom->saveHTML();
 <!--Section: Magazine v.1-->
 
     <!--Section heading-->
-    <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a> </h2>
+    <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$post_author?>"><?=$post_author ?></a> </h2>
 
     <!--Section description-->
     <p class="grey-text pb-5" style="word-wrap: break-word;"><?=$body_part ?></p>
@@ -139,7 +149,7 @@ $body =$dom->saveHTML();
         <div class="modal-content">
            
             <div class="modal-body">
-			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a></h2><br/>
+			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$post_author?>"><?=$post_author ?></a></h2><br/>
 <?=$body ?>
             </div>
             <div class="modal-footer">
@@ -167,8 +177,7 @@ $body =$dom->saveHTML();
 	
 	
 	
-	
-   }
+
 }
    
 }
@@ -186,8 +195,6 @@ $body =$dom->saveHTML();
     <!-- /Start your project here-->
     <!-- SCRIPTS -->
     <!-- JQuery -->
-
-
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="

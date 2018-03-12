@@ -6,7 +6,11 @@ $steemit = 'https://steemit.com';
 $weight = $_COOKIE['ratio'];
 // ratio calculator //
 $weight_final = 100 * $_COOKIE['ratio'];
+
+if (empty($_GET['author'])){
 $author_input = trim(strtolower($_COOKIE['author']));
+}
+else {$author_input = trim(strtolower($_GET['author']));}
 $comment = trim($_COOKIE['comment']);
 $voter = trim(strtolower($_COOKIE['voter']));
 $post_key = trim($_COOKIE['post_key']);
