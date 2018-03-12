@@ -110,7 +110,7 @@ $body =$dom->saveHTML();
 <!--Section: Magazine v.1-->
 
     <!--Section heading-->
-    <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?></h2>
+    <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a> </h2>
 
     <!--Section description-->
     <p class="grey-text pb-5" style="word-wrap: break-word;"><?=$body_part ?></p>
@@ -137,18 +137,14 @@ $body =$dom->saveHTML();
 <div class="modal fade" id="exampleModal<?=$n?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><?=$title_post ?></h5>
-                <button type="button" class="close" data-dismiss="modal" >
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+           
             <div class="modal-body">
+			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a></h2><br/>
 <?=$body ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
             </div>
 		
         </div>
