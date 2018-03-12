@@ -44,7 +44,10 @@ else {header('Location: login.php');}
 			
 
               <a type="button" href="single.php" class="btn btn-default btn-lg btn-block">Post Specific Upvote</a>
-<a type="button" href="pickauthor.php" class="btn btn-light-blue btn-lg btn-block">Userlisted List Upvote</a>
+<a type="button" href="pickauthor.php" class="btn btn-light-blue btn-lg btn-block">User List Upvote</a>
+<a type="button" href="picktag.php" class="btn btn-light-blue btn-lg btn-block">Tag List Upvote</a>
+<a type="button" href="tag10.php" class="btn btn-light-blue btn-lg btn-block">Vote First 10(tag)</a>
+<a type="button" href="user10.php" class="btn btn-light-blue btn-lg btn-block">Vote First 10(user)</a>
 
                 <!-- Material input subject -->
               
