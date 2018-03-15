@@ -3,7 +3,7 @@ Upvote&Comment bot written in PHP + JS.
 
 ## Screenshots
 
-![a1.PNG](https://steemitimages.com/DQmQknvJ8g9Ucb1ifMU5ct7kBQdTSMUXjqHNN3RkAHPZiRa/a1.PNG)
+![a.PNG](https://res.cloudinary.com/hpiynhbhq/image/upload/v1520827664/fhf7tqzfcwnscwgdlfi6.png)
 
 ![a2.PNG](https://steemitimages.com/DQmaxEKbi3MLZYqDr5XqnVKjKaEyAZbLwF34T6qrCFWN14M/a2.PNG)
 
