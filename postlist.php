@@ -18,10 +18,10 @@
 <body>
     <!-- Start your project here-->
   <div class="container-fluid">
-   
+
 <div  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <!--Modal: Contact form-->
-		
+
     <div class="modal-dialog cascading-modal" role="document" style="max-width: 800px;">
 
         <!--Content-->
@@ -30,16 +30,14 @@
             <!--Header-->
             <div class="modal-header primary-color white-text">
                <a class="btn-primary" href="index.php" align="left" >BACK</a>&nbsp;&nbsp;&nbsp; <h4 class="title">
-				      
+
                     <i class="fa fa-pencil"></i> Steem Vote</h4>
                 <a class="btn-primary" href="logout.php">LOGOUT</a>
             </div>
             <!--Body-->
             <div class="modal-body">
 			 <ul class="list-group">
-	<li class="list-group-item">Author: <?=$_COOKIE['author'] ?> </li>
-	<li class="list-group-item">Ratio: <?=$_COOKIE['ratio'] ?> </li>
-	<li class="list-group-item">Comment: <?=$_COOKIE['comment'] ?> </li>
+
 </ul>
 			<?php
 error_reporting(0);
@@ -49,6 +47,7 @@ $error = false;
 $steemit = 'https://busy.org';
 // ratio calculator //
 $author_input = trim(strtolower($_POST['author']));
+// die();
 
 if(isset($_POST['submit']))
 {
@@ -74,6 +73,7 @@ setcookie('ratio', $_POST['ratio'], $hour);
  $author_posts = 'https://api.steemjs.com/get_discussions_by_blog?query={"tag":"'.$author_input.'","limit":"30"}';
  $file_get_author = file_get_contents($author_posts);
  $json_author = json_decode($file_get_author, true);
+
  $parsedown = new Parsedown;
 
 
@@ -83,12 +83,27 @@ foreach ($json_author as $data)
    if ($author_input == $data["author"]){
     $title_post = $data['title'];
 	$author_perm_link = $data['permlink'];
-	$linkout = 'localhost/steemvote/upvote.php?a='.$author_perm_link;
+
+  // Lets make use of steemconnect api
+  $api = 'https://v2.steemconnect.com/sign/vote?';
+
+  // Get username of voter from cookie and store in $voter variable
+  $voter = $_COOKIE['voter'];
+
+    // Get username of author whose post is to be voted from resources
+  $author = $data["author"];
+
+  //  Store permlink in variable
+  $permlink = $author_perm_link;
+
+  // Lets concatenate all variables to form our link
+  $linkout = $api."voter=".$voter."&author=".$author."&permlink=".$permlink;
+  
 	$get_link = $steemit.'/@'.$author_input.'/'.$author_perm_link;
 	$body = $data['body'];
 	$body = $parsedown->text($body);
-	
-	
+
+
 	libxml_use_internal_errors(true);
 
 $dom = new DOMDocument;
@@ -103,9 +118,9 @@ foreach ($dom->getElementsByTagName('img') as $node) {
 
 $body =$dom->saveHTML();
 
-	$body_part = substr($data['body'],0,300);	
+	$body_part = substr($data['body'],0,300);
 	?>
-	
+
 
 <!--Section: Magazine v.1-->
 
@@ -121,23 +136,23 @@ $body =$dom->saveHTML();
     <!--Grid column-->
     <div class="col-lg-6 col-md-12">
 
-	 <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
+	 <a target="_BLANK" href="<?=$linkout?>" class="btn btn-secondary">VOTE</a>
        <a target="_BLANK" href="<?=$get_link?>" style="margin: 2px;" class="btn btn-secondary">VIEW LINK</a>
-     
-  
+
+
         <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary"  style="margin: 2px;" data-toggle="modal" data-target="#exampleModal<?=$n?>">
     View Post
 </button>
 
 
-     
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal<?=$n?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-           
+
             <div class="modal-body">
 			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a></h2><br/>
 <?=$body ?>
@@ -146,11 +161,11 @@ $body =$dom->saveHTML();
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
             </div>
-		
+
         </div>
     </div>
 </div>
-                                
+
 
 
     </div>
@@ -160,19 +175,19 @@ $body =$dom->saveHTML();
 
 </section>
 <!--/Section: Magazine v.1-->
-	
+
 	<?php
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
    }
 }
-   
+
 }
-}	
+}
 ?>
 
 </div>
@@ -181,7 +196,7 @@ $body =$dom->saveHTML();
 	</form>
     <!--/Modal: Contact form-->
 </div>
-                      
+
 </div>
     <!-- /Start your project here-->
     <!-- SCRIPTS -->
@@ -201,5 +216,3 @@ $body =$dom->saveHTML();
 </body>
 
 </html>
-	
-	

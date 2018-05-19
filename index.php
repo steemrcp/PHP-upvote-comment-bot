@@ -23,10 +23,10 @@ else {header('Location: login.php');}
 <body>
     <!-- Start your project here-->
   <div class="container-fluid">
-   
+
 <div  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <!--Modal: Contact form-->
-		
+
     <div class="modal-dialog cascading-modal" role="document">
 
         <!--Content-->
@@ -41,16 +41,16 @@ else {header('Location: login.php');}
             <!--Body-->
             <div class="modal-body">
 
-			
+
 
               <a type="button" href="single.php" class="btn btn-default btn-lg btn-block">Post Specific Upvote</a>
-<a type="button" href="pickauthor.php" class="btn btn-light-blue btn-lg btn-block">User List Upvote</a>
-<a type="button" href="picktag.php" class="btn btn-light-blue btn-lg btn-block">Tag List Upvote</a>
-<a type="button" href="tag10.php" class="btn btn-light-blue btn-lg btn-block">Vote First 10(tag)</a>
-<a type="button" href="user10.php" class="btn btn-light-blue btn-lg btn-block">Vote First 10(user)</a>
+              <a type="button" href="pickauthor.php" class="btn btn-light-blue btn-lg btn-block">User List Upvote</a>
+              <a type="button" href="picktag.php" class="btn btn-light-blue btn-lg btn-block">Tag List Upvote</a>
+              <a type="button" href="tag10.php" class="btn btn-light-blue btn-lg btn-block">Vote First 10(tag)</a>
+              <a type="button" href="user10.php" class="btn btn-light-blue btn-lg btn-block">Vote First 10(user)</a>
 
                 <!-- Material input subject -->
-              
+
 
             </div>
         </div>
@@ -58,7 +58,7 @@ else {header('Location: login.php');}
     </div>
     <!--/Modal: Contact form-->
 </div>
-                      
+
 </div>
     <!-- /Start your project here-->
     <!-- SCRIPTS -->

@@ -1,5 +1,10 @@
 <?php
 if (isset($_COOKIE['voter']) || isset($_COOKIE['post_key'])){
+
+    // echo $_COOKIE['voter'];
+    // echo "<br>";
+    // echo $_COOKIE['post_key'];
+
 }
 else {header('Location: login.php');}
 ?>
@@ -23,10 +28,10 @@ else {header('Location: login.php');}
 <body>
     <!-- Start your project here-->
   <div class="container-fluid">
-   
+
 <div  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <!--Modal: Contact form-->
-		
+
     <div class="modal-dialog cascading-modal" role="document">
 
         <!--Content-->
@@ -35,47 +40,86 @@ else {header('Location: login.php');}
             <!--Header-->
             <div class="modal-header primary-color white-text">
                <a class="btn-primary" href="index.php" align="left" >BACK</a>&nbsp;&nbsp;&nbsp; <h4 class="title">
-				      
+
                     <i class="fa fa-pencil"></i> Steem Vote</h4>
                 <a class="btn-primary" href="logout.php">LOGOUT</a>
             </div>
             <!--Body-->
             <div class="modal-body">
-<form action="postlist.php" method="POST">
-			
 
-              <div class="md-form form-sm">
-                    <i class="fa fa-address-card prefix"></i>
-                    <input name="author" type="text" id="materialFormNameModalEx2" value="<?=$_COOKIE["author"]?>" class="form-control form-control-sm">
-                    <label for="materialFormNameModalEx2">Who To Vote</label>
-                </div>
+                <form action="postlist.php" method="POST">
 
-              <div class="md-form form-sm">
-                    <i class="fa fa-address-card prefix"></i>
-                    <input name="ratio" type="text" id="materialFormNameModalEx2" value="<?=$_COOKIE["ratio"]?>" class="form-control form-control-sm">
-                    <label for="materialFormNameModalEx2">Vote Percentage</label>
-                </div>
+                  <div class="md-form form-sm">
+                        <i class="fa fa-address-card prefix"></i>
+                        <?php
+                            // Lets Prevent error if $_COOKIE["author"] isn't set
+                            if (isset($_COOKIE["author"])) { ?>
 
-              <div class="md-form form-sm">
-                    <i class="fa fa-address-card prefix"></i>
-                    <textarea name="comment" id="materialFormNameModalEx2"  class="form-control form-control-sm"><?=$_COOKIE["comment"]?></textarea>
-                    <label for="materialFormNameModalEx2">Vote Comment</label>
-                </div>
+                                <input name="author" type="text" id="materialFormNameModalEx2" value="<?=$_COOKIE["author"]?>" class="form-control form-control-sm">
+                        <?php
+                            }else { ?>
+                                <input name="author" type="text" id="materialFormNameModalEx2" class="form-control form-control-sm">
+                        <?php
+                            }
+                         ?>
+
+                        <label for="materialFormNameModalEx2">Who To Vote</label>
+                    </div>
+
+                  <div class="md-form form-sm">
+                        <i class="fa fa-address-card prefix"></i>
+
+                        <?php
+                            // Lets Prevent error if $_COOKIE["ratio"] isn't set
+                            if (isset($_COOKIE["ratio"])) { ?>
+
+                                <input name="ratio" type="text" id="materialFormNameModalEx2" value="<?=$_COOKIE["ratio"]?>" class="form-control form-control-sm">
+                        <?php
+                            }else { ?>
+
+                                <input name="ratio" type="text" id="materialFormNameModalEx2" class="form-control form-control-sm">
+                        <?php
+                            }
+                         ?>
+
+                        <label for="materialFormNameModalEx2">Vote Percentage</label>
+                    </div>
+
+                  <div class="md-form form-sm">
+                        <i class="fa fa-address-card prefix"></i>
+                        <?php
+                            // Lets Prevent error if $_COOKIE["comment"] isn't set
+                            if (isset($_COOKIE["comment"])) { ?>
+
+                                <textarea name="comment" id="materialFormNameModalEx2"  class="form-control form-control-sm"><?=$_COOKIE["comment"]?></textarea>
+                        <?php
+                            }else { ?>
+
+                                <textarea name="comment" id="materialFormNameModalEx2"  class="form-control form-control-sm"></textarea>
+                        <?php
+                            }
+                         ?>
+
+                        <label for="materialFormNameModalEx2">Vote Comment</label>
+                    </div>
 
 
-                <div class="text-center mt-4 mb-2">
-                    <input class="btn btn-primary" name="submit"  type="submit" value="Vote&comment" />
-                    </input>
-                </div>
+                    <div class="text-center mt-4 mb-2">
+                        <input class="btn btn-primary" name="submit"  type="submit" value="Vote&comment" />
+                        </input>
+                    </div>
+
+                </form>
+                <!--/Modal: Contact form-->
 
             </div>
+
         </div>
         <!--/.Content-->
     </div>
-	</form>
-    <!--/Modal: Contact form-->
+
 </div>
-                      
+
 </div>
     <!-- /Start your project here-->
     <!-- SCRIPTS -->
