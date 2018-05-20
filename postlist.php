@@ -15,193 +15,180 @@
     <!-- Your custom styles (optional) -->
     <link href="css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Start your project here-->
   <div class="container-fluid">
 
-<div  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <!--Modal: Contact form-->
+    <div  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <!--Modal: Contact form-->
 
-    <div class="modal-dialog cascading-modal" role="document" style="max-width: 800px;">
+        <div class="modal-dialog cascading-modal" role="document" style="max-width: 800px;">
 
-        <!--Content-->
-        <div class="modal-content">
+            <!--Content-->
+            <div class="modal-content">
 
-            <!--Header-->
-            <div class="modal-header primary-color white-text">
-               <a class="btn-primary" href="index.php" align="left" >BACK</a>&nbsp;&nbsp;&nbsp; <h4 class="title">
+                <!--Header-->
+                <div class="modal-header primary-color white-text">
+                   <a class="btn-primary" href="index.php" align="left" >BACK</a>&nbsp;&nbsp;&nbsp; <h4 class="title">
 
-                    <i class="fa fa-pencil"></i> Steem Vote</h4>
-                <a class="btn-primary" href="logout.php">LOGOUT</a>
-            </div>
-            <!--Body-->
-            <div class="modal-body">
-			 <ul class="list-group">
+                        <i class="fa fa-pencil"></i> Steem Vote</h4>
+                    <a class="btn-primary" href="logout.php">LOGOUT</a>
+                </div>
+                <!--Body-->
+                <div class="modal-body">
 
-</ul>
-			<?php
-error_reporting(0);
-include('parsedown.php');
-$error = false;
-// variables //
-$steemit = 'https://busy.org';
-// ratio calculator //
-$author_input = trim(strtolower($_POST['author']));
-// die();
+    			<?php
+              error_reporting(0);
+              include('parsedown.php');
+              $error = false;
+              // variables //
+              $steemit = 'https://busy.org';
+              // ratio calculator //
+              $author_input = trim(strtolower($_POST['author']));
+              // die();
 
-if(isset($_POST['submit']))
-{
-	// if inputs are empty, print error //
-if(empty($author_input))
-{
-	$error = true;
-	echo '
-	<div class="alert alert-danger">
-	<strong>HELLO ? </strong> You have to fill all inputs.
-	</div>
-	';
-}
-else{
-// Get latest posts by author //
+              if(isset($_POST['submit']))
+              {
+              	// if inputs are empty, print error //
+              if(empty($author_input))
+              {
+              	$error = true;
+              	echo '
+              	<div class="alert alert-danger">
+              	<strong>HELLO ? </strong> You have to fill all inputs.
+              	</div>
+              	';
+              }
+              else{
+              // Get latest posts by author //
 
- $hour = time() + 3600 * 24 * 30;
-setcookie('author', $_POST['author'], $hour);
-setcookie('comment', $_POST['comment'], $hour);
-setcookie('ratio', $_POST['ratio'], $hour);
+               $hour = time() + 3600 * 24 * 30;
+              setcookie('author', $_POST['author'], $hour);
+              // setcookie('comment', $_POST['comment'], $hour);
+              // setcookie('ratio', $_POST['ratio'], $hour);
 
 
- $author_posts = 'https://api.steemjs.com/get_discussions_by_blog?query={"tag":"'.$author_input.'","limit":"30"}';
- $file_get_author = file_get_contents($author_posts);
- $json_author = json_decode($file_get_author, true);
+               $author_posts = 'https://api.steemjs.com/get_discussions_by_blog?query={"tag":"'.$author_input.'","limit":"30"}';
+               $file_get_author = file_get_contents($author_posts);
+               $json_author = json_decode($file_get_author, true);
 
- $parsedown = new Parsedown;
-
-
- $n = 0;
-foreach ($json_author as $data)
-{   $n++;
-   if ($author_input == $data["author"]){
-    $title_post = $data['title'];
-	$author_perm_link = $data['permlink'];
-
-  // Lets make use of steemconnect api
-  $api = 'https://v2.steemconnect.com/sign/vote?';
-
-  // Get username of voter from cookie and store in $voter variable
-  $voter = $_COOKIE['voter'];
-
-    // Get username of author whose post is to be voted from resources
-  $author = $data["author"];
-
-  //  Store permlink in variable
-  $permlink = $author_perm_link;
-
-  // Lets concatenate all variables to form our link
-  $linkout = $api."voter=".$voter."&author=".$author."&permlink=".$permlink;
-  
-	$get_link = $steemit.'/@'.$author_input.'/'.$author_perm_link;
-	$body = $data['body'];
-	$body = $parsedown->text($body);
+               $parsedown = new Parsedown;
 
 
-	libxml_use_internal_errors(true);
+               $n = 0;
+              foreach ($json_author as $data)
+              {   $n++;
+                 if ($author_input == $data["author"]){
+                  $title_post = $data['title'];
+              	$author_perm_link = $data['permlink'];
 
-$dom = new DOMDocument;
-$dom->loadHTML($body);
+                // Lets make use of steemconnect api
+                $api = 'https://v2.steemconnect.com/sign/vote?';
 
+                // Get username of voter from cookie and store in $voter variable
+                $voter = $_COOKIE['voter'];
 
-foreach ($dom->getElementsByTagName('img') as $node) {
+                  // Get username of author whose post is to be voted from resources
+                $author = $data["author"];
 
-    $node->setAttribute('class','img-responsive col-sm-6 col-lg-7');
+                //  Store permlink in variable
+                $permlink = $author_perm_link;
 
-}
+                // Lets concatenate all variables to form our link
+                $linkout = $api."voter=".$voter."&author=".$author."&permlink=".$permlink;
 
-$body =$dom->saveHTML();
-
-	$body_part = substr($data['body'],0,300);
-	?>
-
-
-<!--Section: Magazine v.1-->
-
-    <!--Section heading-->
-    <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a> </h2>
-
-    <!--Section description-->
-    <p class="grey-text pb-5" style="word-wrap: break-word;"><?=$body_part ?></p>
-
-    <!--Grid row-->
-    <div class="row text-left">
-
-    <!--Grid column-->
-    <div class="col-lg-6 col-md-12">
-
-	 <a target="_BLANK" href="<?=$linkout?>" class="btn btn-secondary">VOTE</a>
-       <a target="_BLANK" href="<?=$get_link?>" style="margin: 2px;" class="btn btn-secondary">VIEW LINK</a>
+              	$get_link = $steemit.'/@'.$author_input.'/'.$author_perm_link;
+              	$body = $data['body'];
+              	$body = $parsedown->text($body);
 
 
-        <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary"  style="margin: 2px;" data-toggle="modal" data-target="#exampleModal<?=$n?>">
-    View Post
-</button>
+              	libxml_use_internal_errors(true);
+
+              $dom = new DOMDocument;
+              $dom->loadHTML($body);
+
+
+              foreach ($dom->getElementsByTagName('img') as $node) {
+
+                  $node->setAttribute('class','img-responsive col-sm-6 col-lg-7');
+
+              }
+
+              $body =$dom->saveHTML();
+
+              	$body_part = substr($data['body'],0,300);
+              	?>
+
+
+              <!--Section: Magazine v.1-->
+
+                  <!--Section heading-->
+                  <h2 class="h1 text-center my-5 font-weight-bold"><?=$title_post ?> <br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a> </h2>
+
+                  <!--Section description-->
+                  <p class="grey-text pb-5" style="word-wrap: break-word;"><?=$body_part ?></p>
+
+                  <!--Grid row-->
+                  <div class="row text-left">
+
+                  <!--Grid column-->
+                  <div class="col-lg-6 col-md-12">
+
+              	 <a target="_BLANK" href="<?=$linkout?>" class="btn btn-secondary">VOTE</a>
+                 <a target="_BLANK" href="<?=$get_link?>" style="margin: 2px;" class="btn btn-secondary">VIEW LINK</a>
+
+
+                      <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary"  style="margin: 2px;" data-toggle="modal" data-target="#exampleModal<?=$n?>">
+                  View Post
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal<?=$n?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                      <div class="modal-content">
+
+                          <div class="modal-body">
+              			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a></h2><br/>
+              <?=$body ?>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
+                          </div>
+
+                      </div>
+                  </div>
+              </div>
 
 
 
+                  </div>
+                  <!--Grid column-->
+                  </div>
+                  <!--Grid row-->
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal<?=$n?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+              </section>
+              <!--/Section: Magazine v.1-->
 
-            <div class="modal-body">
-			 <h2 class="modal-title text-center" id="exampleModalLabel"><?=$title_post ?><br/>Author: <a target="_BLANK" href="https://steemit.com/@<?=$author_input?>"><?=$author_input ?></a></h2><br/>
-<?=$body ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a target="_BLANK" href="http://<?=$linkout?>" class="btn btn-secondary">VOTE</a>
-            </div>
+              	<?php
 
+                 }
+              }
+
+          }
+      }
+      ?>
+
+    </div>
+            <!--/.Content-->
         </div>
+    	</form>
+        <!--/Modal: Contact form-->
     </div>
-</div>
-
-
 
     </div>
-    <!--Grid column-->
-    </div>
-    <!--Grid row-->
-
-</section>
-<!--/Section: Magazine v.1-->
-
-	<?php
-
-
-
-
-
-
-   }
-}
-
-}
-}
-?>
-
-</div>
-        <!--/.Content-->
-    </div>
-	</form>
-    <!--/Modal: Contact form-->
-</div>
-
-</div>
-    <!-- /Start your project here-->
-    <!-- SCRIPTS -->
-    <!-- JQuery -->
-
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"

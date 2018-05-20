@@ -23,63 +23,46 @@ else {header('Location: login.php');}
 <body>
     <!-- Start your project here-->
   <div class="container-fluid">
-   
-<div  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <!--Modal: Contact form-->
-		
-    <div class="modal-dialog cascading-modal" role="document">
 
-        <!--Content-->
-        <div class="modal-content">
+      <div class="jumbotron">
 
-            <!--Header-->
-            <div class="modal-header primary-color white-text">
-               <a class="btn-primary" href="index.php" align="left" >BACK</a>&nbsp;&nbsp;&nbsp; <h4 class="title">
-				      
-                    <i class="fa fa-pencil"></i> Steem Vote</h4>
-                <a class="btn-primary" href="logout.php">LOGOUT</a>
+          <h4>Post Specific Upvote</h4>
+          <p>Fetch a list of recent posts for a specfic user</p>
+
+      </div>
+
+        <div class="modal-dialog cascading-modal" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Header-->
+                <div class="modal-header primary-color white-text">
+                   <a class="btn-primary" href="index.php" align="left" >BACK</a>&nbsp;&nbsp;&nbsp; <h4 class="title">
+
+                        <i class="fa fa-pencil"></i> Steem Voter</h4>
+                    <a class="btn-primary" href="logout.php">LOGOUT</a>
+                </div>
+                <!--Body-->
+                <div class="modal-body">
+                    <form action="singleaction.php" method="POST">
+                      <div class="md-form form-sm">
+                            <i class="fa fa-user prefix"></i>
+                            <input name="author" type="text" id="materialFormNameModalEx2" class="form-control form-control-sm">
+                            <label for="materialFormNameModalEx2">Enter Username of account. Example: steemrcp</label>
+                        </div>
+
+                        <div class="text-center mt-4 mb-2">
+                            <input class="btn btn-primary" name="submit"  type="submit" value="Fetch Posts" />
+                            </input>
+                        </div>
+                    </form>
+                    </div>
+                    <!--/.Content-->
+                </div>
             </div>
-            <!--Body-->
-            <div class="modal-body">
-<form action="action.php" method="POST">
-			
+        <!--/Modal: Contact form-->
+    </div> -->
 
-              <div class="md-form form-sm">
-                    <i class="fa fa-address-card prefix"></i>
-                    <input name="author" type="text" id="materialFormNameModalEx2" class="form-control form-control-sm">
-                    <label for="materialFormNameModalEx2">Who To Vote</label>
-                </div>
-
-                <!-- Material input subject -->
-                <div class="md-form form-sm">
-                    <i class="fa fa-arrow-up prefix"></i>
-                    <input name="ratio"  type="text" id="materialFormSubjectModalEx1" class="form-control form-control-sm">
-                    <label for="materialFormSubjectModalEx1">Voting Ratio</label>
-                </div>
-
-               
-
-                <!-- Material textarea message -->
-                <div class="md-form form-sm">
-                    <i class="fa fa-pencil prefix"></i>
-                    <textarea type="text" id="materialFormMessageModalEx1" class="md-textarea form-control" name="comment" ></textarea>
-                    <label for="materialFormMessageModalEx1">Comment</label>
-                </div>
-
-                <div class="text-center mt-4 mb-2">
-                    <input class="btn btn-primary" name="submit"  type="submit" value="Vote&comment" />
-                    </input>
-                </div>
-
-            </div>
-        </div>
-        <!--/.Content-->
-    </div>
-	</form>
-    <!--/Modal: Contact form-->
-</div>
-                      
-</div>
+  </div>
     <!-- /Start your project here-->
     <!-- SCRIPTS -->
     <!-- JQuery -->
